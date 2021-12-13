@@ -1,8 +1,12 @@
 package HW6;
 
+import java.io.File;
+import java.io.FileNotFoundException;
 import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.Iterator;
 import java.util.Random;
+import java.util.Scanner;
 
 public class relaxAndRound {
 
@@ -11,10 +15,84 @@ public class relaxAndRound {
 	public static int D = 25;
 
 	public static void main(String[] args) {
-		Question1();
+		// Question1();
 		// Question2();
+		RandomRound();
 	}
 
+	/**
+	 * Assign the people for each skill based on model from part b
+	 * @param skillsList
+	 */
+	private static void InitializeList(ArrayList<HashSet<String>> skillsList) {
+		try {
+			Scanner s = new Scanner(new File("constraints.txt"));
+			while (s.hasNext()) {
+				HashSet<String> set = new HashSet<String>();
+				String[] tokens = s.nextLine().split(":");
+				tokens = tokens[1].split("\\+");
+				for (int i = 0; i < tokens.length; i++) {
+					set.add(tokens[i].trim());
+				}	
+				skillsList.add(set);
+			}
+		} catch (FileNotFoundException e) {
+			e.printStackTrace();
+		}
+	}
+
+	private static void RandomRound() {
+		ArrayList<HashSet<String>> skillList = new ArrayList<HashSet<String>>(M);
+		InitializeList(skillList);
+
+		ArrayList<Integer> people = new ArrayList<Integer>();
+		ArrayList<String> peopleNames = new ArrayList<String>();
+
+		double t = 8.0;
+
+		try {
+			Random rand = new Random();
+			Scanner scan = new Scanner(new File("LP.txt"));
+			scan.nextLine();
+			for (int i = 0; i < 500; i++) {
+				scan.next();
+				double r = rand.nextDouble();
+				double x = scan.nextDouble();
+				if (r <= x*t) {//prob of rounding up
+					people.add(1);
+					peopleNames.add("x"+(i+1));
+				}
+				else
+					people.add(0);
+			}
+			//for each person picked
+			for(String name: peopleNames) {
+				//System.out.println(name);
+				Iterator<HashSet<String>> iter = skillList.iterator();
+				while(iter.hasNext()) {
+					if(iter.next().contains(name)) {
+						iter.remove();
+					}
+				}
+			}
+			System.out.println("T: " + t);
+			System.out.println("Total people hired: " + peopleNames.size());
+			System.out.println("Total skills not covered: " + skillList.size());
+
+			/*
+			 * while(scan.hasNext()) { System.out.println(scan.next()); }
+			 */
+		} catch (FileNotFoundException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
+
+	/**
+	 * Used for printing input for a LP solver
+	 * 
+	 * @param list
+	 */
 	private static void printSetCover(ArrayList<HashSet<Integer>> list) {
 		// for all skills
 		String min = "minimize z: ";
@@ -35,7 +113,7 @@ public class relaxAndRound {
 
 		for (int i = 0; i < list.size(); i++) {
 			String output = "subject to c" + c + ": ";
-			System.out.println(output + "x" + (i + 1) + " <= 1;" );
+			System.out.println(output + "x" + (i + 1) + " <= 1;");
 			c++;
 		}
 
@@ -70,7 +148,7 @@ public class relaxAndRound {
 
 		ArrayList<HashSet<Integer>> list = new ArrayList<HashSet<Integer>>(n);
 		Random rand = new Random();
-
+		rand.setSeed(0);
 		for (int i = 0; i < n; i++) { // for each person
 			HashSet<Integer> set = new HashSet<Integer>();
 			while (set.size() < d) { // until set has d skills
@@ -79,7 +157,8 @@ public class relaxAndRound {
 			list.add(set);
 		}
 
-		printSetCover(list);
+		//RandomRound(list);
+		// printSetCover(list);
 	}
 
 	private static void Question2() {
