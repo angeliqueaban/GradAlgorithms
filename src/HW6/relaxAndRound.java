@@ -22,6 +22,7 @@ public class relaxAndRound {
 
 	/**
 	 * Assign the people for each skill based on model from part b
+	 * 
 	 * @param skillsList
 	 */
 	private static void InitializeList(ArrayList<HashSet<String>> skillsList) {
@@ -33,7 +34,7 @@ public class relaxAndRound {
 				tokens = tokens[1].split("\\+");
 				for (int i = 0; i < tokens.length; i++) {
 					set.add(tokens[i].trim());
-				}	
+				}
 				skillsList.add(set);
 			}
 		} catch (FileNotFoundException e) {
@@ -58,19 +59,18 @@ public class relaxAndRound {
 				scan.next();
 				double r = rand.nextDouble();
 				double x = scan.nextDouble();
-				if (r <= x*t) {//prob of rounding up
+				if (r <= x * t) {// prob of rounding up
 					people.add(1);
-					peopleNames.add("x"+(i+1));
-				}
-				else
+					peopleNames.add("x" + (i + 1));
+				} else
 					people.add(0);
 			}
-			//for each person picked
-			for(String name: peopleNames) {
-				//System.out.println(name);
+			// for each person picked
+			for (String name : peopleNames) {
+				//remove skills that are covered by the curr person
 				Iterator<HashSet<String>> iter = skillList.iterator();
-				while(iter.hasNext()) {
-					if(iter.next().contains(name)) {
+				while (iter.hasNext()) {
+					if (iter.next().contains(name)) {
 						iter.remove();
 					}
 				}
@@ -79,9 +79,6 @@ public class relaxAndRound {
 			System.out.println("Total people hired: " + peopleNames.size());
 			System.out.println("Total skills not covered: " + skillList.size());
 
-			/*
-			 * while(scan.hasNext()) { System.out.println(scan.next()); }
-			 */
 		} catch (FileNotFoundException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -157,7 +154,6 @@ public class relaxAndRound {
 			list.add(set);
 		}
 
-		//RandomRound(list);
 		// printSetCover(list);
 	}
 
