@@ -59,7 +59,7 @@ public class relaxAndRound {
 				scan.next();
 				double r = rand.nextDouble();
 				double x = scan.nextDouble();
-				if (r <= x * t) {// prob of rounding up
+				if (r <= x * t) {// round x_i with prob x_i*t
 					people.add(1);
 					peopleNames.add("x" + (i + 1));
 				} else
